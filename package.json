@@ -14,8 +14,11 @@
     "@chakra-ui/react": "^1.6.10",
     "@emotion/react": "^11.5.0",
     "@emotion/styled": "^11.3.0",
+    "@prismicio/client": "^5.1.0",
+    "date-fns": "^2.0.0-beta.5",
     "framer-motion": "^4.1.17",
     "next": "11.1.2",
+    "prismic-dom": "^2.2.6",
     "react": "17.0.2",
     "react-dom": "17.0.2"
   },

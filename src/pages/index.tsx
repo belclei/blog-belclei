@@ -1,29 +1,38 @@
-import { Flex, Box, Text, HStack } from '@chakra-ui/react'
+import { Flex, Box } from '@chakra-ui/react'
 import { Header } from '../components/Header'
-import { PostItem } from '../components/PostItem'
+import { Post } from '../components/Post'
+import { getPrismicClient } from '../services/prismic'
+import Prismic from '@prismicio/client'
+import { RichText } from 'prismic-dom'
+import { GetStaticProps } from 'next'
+import { format } from 'date-fns'
+import { ptBR } from 'date-fns/locale'
 
-type PostItem = {
+type Post = {
   slug: string
   title: string
+  subtitle: string
   createdAt: string
+  updatedAt: string
   readTime: number
-  detail: string
 }
 interface BlogProps {
-  postItems: PostItem[]
+  posts: Post[]
 }
-export default function Blog({ postItems }: BlogProps) {
+export default function Blog({ posts }: BlogProps) {
   return (
     <Flex w="100vw" h="100vh">
       <Box maxW="800px" w="50rem" mx="auto">
         <Header />
-        {postItems.map(post => (
-          <PostItem
+        {posts.map(post => (
+          <Post
             key={post.slug}
+            slug={post.slug}
             title={post.title}
             createdAt={post.createdAt}
+            updatedAt={post.updatedAt}
             readTime={post.readTime}
-            detail={post.detail}
+            subtitle={post.subtitle}
           />
         ))}
       </Box>
@@ -31,43 +40,37 @@ export default function Blog({ postItems }: BlogProps) {
   )
 }
 
-export async function getStaticProps() {
-  const postItems = [
-    {
-      slug: '1',
-      title: 'Como utilizar Hooks',
-      createdAt: '20 de junho de 2021',
-      readTime: 3,
-      detail:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores tempore voluptas pariatur fuga, corporis iure quasi, necessitatibus cupiditate veniam reprehenderit provident repellat alias maxime dolorum velit cumque eum minima modi?'
-    },
-    {
-      slug: '2',
-      title: 'Como utilizar Hooks 2',
-      createdAt: '20 de junho de 2021',
-      readTime: 3,
-      detail:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores tempore voluptas pariatur fuga, corporis iure quasi, necessitatibus cupiditate veniam reprehenderit provident repellat alias maxime dolorum velit cumque eum minima modi?'
-    },
-    {
-      slug: '3',
-      title: 'Como utilizar Hooks 3',
-      createdAt: '20 de junho de 2021',
-      readTime: 3,
-      detail:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores tempore voluptas pariatur fuga, corporis iure quasi, necessitatibus cupiditate veniam reprehenderit provident repellat alias maxime dolorum velit cumque eum minima modi?'
-    },
-    {
-      slug: '4',
-      title: 'Como utilizar Hooks 4',
-      createdAt: '20 de junho de 2021',
-      readTime: 3,
-      detail:
-        'Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolores tempore voluptas pariatur fuga, corporis iure quasi, necessitatibus cupiditate veniam reprehenderit provident repellat alias maxime dolorum velit cumque eum minima modi?'
-    }
-  ]
+export const getStaticProps: GetStaticProps = async () => {
+  const prismic = getPrismicClient()
 
+  const response = await prismic.query([Prismic.predicates.at('document.type', 'post')], {
+    fetch: ['post.title', 'post.subtitle', 'post.content'],
+    pageSize: 100
+  })
+
+  const posts = response.results.map(post => {
+    const contentArray = post.data.content.reduce((acc, cur) => {
+      return [...acc, ...cur.body]
+    }, [])
+    const allBodyString = RichText.asText(contentArray)
+    const time = Math.ceil(allBodyString.split(' ').length / 200)
+
+    return {
+      slug: post.uid,
+      title: post.data.title,
+      subtitle: post.data.subtitle,
+      readTime: time,
+      createdAt: format(new Date(post.first_publication_date), 'dd MMM yyyy', {
+        locale: ptBR
+      }),
+      updatedAt:
+        post.first_publication_date !== post.last_publication_date &&
+        format(new Date(post.last_publication_date), "dd MMM yyyy', às ' HH:mm", {
+          locale: ptBR
+        })
+    }
+  })
   return {
-    props: { postItems }
+    props: { posts }
   }
 }
