@@ -1,5 +1,6 @@
 import { Flex, Box, Text, HStack } from '@chakra-ui/react'
 import { CalendarIcon, TimeIcon } from '@chakra-ui/icons'
+import Link from 'next/link'
 
 interface PostProps {
   slug: string
@@ -9,11 +10,13 @@ interface PostProps {
   updatedAt: string
   readTime: number
 }
-export function Post({ title, createdAt, readTime, subtitle, updatedAt }: PostProps): JSX.Element {
+export function Post({ slug, title, createdAt, readTime, subtitle, updatedAt }: PostProps): JSX.Element {
   return (
     <Box px="4" mb="4" pb="4">
       <Text as="h1" fontFamily="heading" fontSize="2xl" fontWeight="bold" color="heading.500">
-        {title}
+        <Link href={`/blog/${slug}`}>
+          <a>{title}</a>
+        </Link>
       </Text>
       <HStack my="3" spacing="4" color="body.100">
         <HStack>
