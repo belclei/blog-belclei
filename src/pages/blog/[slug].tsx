@@ -42,9 +42,10 @@ export default function Post({ post }: PostProps): JSX.Element {
         />
         {post.data.content.map(data => {
           return (
-            <Box key={data.heading}>
+            <Box key={data.heading} px="4">
               <Box
                 my="4"
+                color="heading.500"
                 dangerouslySetInnerHTML={{
                   __html: RichText.asHtml(data.heading)
                 }}
