@@ -65,12 +65,11 @@ export default function Post({ post }: PostProps): JSX.Element {
 export const getStaticPaths: GetStaticPaths = async () => {
   const prismic = getPrismicClient()
   const posts = await prismic.query([Prismic.predicates.at('document.type', 'post')], {
-    fetch: ['posts.uid']
+    fetch: ['post.uid']
   })
   const paths = posts.results.map(post => {
     return { params: { slug: post.uid } }
   })
-  console.log(paths)
   return {
     paths,
     fallback: true
