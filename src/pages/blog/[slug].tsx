@@ -7,6 +7,8 @@ import { Flex, Box } from '@chakra-ui/react'
 import { Header } from '../../components/Header'
 import { RichText } from 'prismic-dom'
 import { Post as PostComponent } from '../../components/Post'
+import { Text, Spinner } from '@chakra-ui/react'
+import { useRouter } from 'next/router'
 
 interface PostProps {
   post: {
@@ -26,38 +28,47 @@ interface PostProps {
     readTime: number
   }
 }
+
 export default function Post({ post }: PostProps): JSX.Element {
+  const router = useRouter()
+
   return (
     <Flex w="100vw" h="100vh" as="article">
       <Box maxW="800px" w="50rem" mx="auto">
         <Header />
-        <PostComponent
-          key={post.uid}
-          slug={post.uid}
-          title={post.data.title}
-          createdAt={post.createdAt}
-          updatedAt={post.updatedAt}
-          readTime={post.readTime}
-          subtitle={post.data.subtitle}
-        />
-        {post.data.content.map(data => {
-          return (
-            <Box key={data.heading} px="4">
-              <Box
-                my="4"
-                color="heading.500"
-                dangerouslySetInnerHTML={{
-                  __html: RichText.asHtml(data.heading)
-                }}
-              />
-              <Box
-                dangerouslySetInnerHTML={{
-                  __html: RichText.asHtml(data.body)
-                }}
-              />
-            </Box>
-          )
-        })}
+        {router.isFallback ? (
+          <Spinner label="Carregando..." />
+        ) : (
+          <>
+            <PostComponent
+              key={post.uid}
+              slug={post.uid}
+              title={post.data.title}
+              createdAt={post.createdAt}
+              updatedAt={post.updatedAt}
+              readTime={post.readTime}
+              subtitle={post.data.subtitle}
+            />
+            {post.data.content.map(data => {
+              return (
+                <Box key={data.heading} px="4">
+                  <Box
+                    my="4"
+                    color="heading.500"
+                    dangerouslySetInnerHTML={{
+                      __html: RichText.asHtml(data.heading)
+                    }}
+                  />
+                  <Box
+                    dangerouslySetInnerHTML={{
+                      __html: RichText.asHtml(data.body)
+                    }}
+                  />
+                </Box>
+              )
+            })}
+          </>
+        )}
       </Box>
     </Flex>
   )
@@ -65,9 +76,7 @@ export default function Post({ post }: PostProps): JSX.Element {
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const prismic = getPrismicClient()
-  const posts = await prismic.query([Prismic.predicates.at('document.type', 'post')], {
-    fetch: ['post.uid']
-  })
+  const posts = await prismic.query([Prismic.predicates.at('document.type', 'post')], {})
   const paths = posts.results.map(post => {
     return { params: { slug: post.uid } }
   })
@@ -96,15 +105,12 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   const allBodyString = RichText.asText(contentArray)
   const readTime = Math.ceil(allBodyString.split(' ').length / 200)
 
+  const post = { data, uid, createdAt, updatedAt, readTime }
+
   return {
     props: {
-      post: {
-        data,
-        uid,
-        createdAt,
-        updatedAt,
-        readTime
-      }
-    }
+      post
+    },
+    revalidate: 60 * 30 //30 minutos
   }
 }
