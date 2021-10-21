@@ -86,31 +86,37 @@ export const getStaticPaths: GetStaticPaths = async () => {
   }
 }
 export const getStaticProps: GetStaticProps = async ({ params }) => {
-  const prismic = getPrismicClient()
-  const strUid = String(params.slug)
+  try {
+    const prismic = getPrismicClient()
+    const strUid = String(params.slug)
 
-  const { first_publication_date, data, uid, last_publication_date } = await prismic.getByUID('post', strUid, {})
+    const { first_publication_date, data, uid, last_publication_date } = await prismic.getByUID('post', strUid, {})
 
-  const createdAt = format(new Date(first_publication_date), 'dd MMM yyyy', {
-    locale: ptBR
-  })
-  const updatedAt =
-    first_publication_date !== last_publication_date &&
-    format(new Date(last_publication_date), "dd MMM yyyy', às ' HH:mm", {
+    const createdAt = format(new Date(first_publication_date), 'dd MMM yyyy', {
       locale: ptBR
     })
-  const contentArray = data.content.reduce((acc, cur) => {
-    return [...acc, ...cur.body]
-  }, [])
-  const allBodyString = RichText.asText(contentArray)
-  const readTime = Math.ceil(allBodyString.split(' ').length / 200)
+    const updatedAt =
+      first_publication_date !== last_publication_date &&
+      format(new Date(last_publication_date), "dd MMM yyyy', às ' HH:mm", {
+        locale: ptBR
+      })
+    const contentArray = data.content.reduce((acc, cur) => {
+      return [...acc, ...cur.body]
+    }, [])
+    const allBodyString = RichText.asText(contentArray)
+    const readTime = Math.ceil(allBodyString.split(' ').length / 200)
 
-  const post = { data, uid, createdAt, updatedAt, readTime }
+    const post = { data, uid, createdAt, updatedAt, readTime }
 
-  return {
-    props: {
-      post
-    },
-    revalidate: 60 * 30 //30 minutos
+    return {
+      props: {
+        post
+      },
+      revalidate: 60 * 30 //30 minutos
+    }
+  } catch {
+    return {
+      notFound: true
+    }
   }
 }
