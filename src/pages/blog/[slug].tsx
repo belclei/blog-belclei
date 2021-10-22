@@ -7,9 +7,10 @@ import { Flex, Box } from '@chakra-ui/react'
 import { Header } from '../../components/Header'
 import { RichText } from 'prismic-dom'
 import { Post as PostComponent } from '../../components/Post'
-import { Text, Spinner } from '@chakra-ui/react'
+import { Text, Spinner, HStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import Comments from '../../components/Comments'
+import { SiLinkedin, SiTwitter } from 'react-icons/si'
 
 interface PostProps {
   post: {
@@ -69,6 +70,40 @@ export default function Post({ post }: PostProps): JSX.Element {
                 </Box>
               )
             })}
+            <HStack color="heading.500">
+              <Text
+                as="h1"
+                pl="4"
+                fontFamily="heading"
+                fontSize="large"
+                fontWeight="bold"
+                my="8"
+                textAlign="end"
+                flex={1}
+              >
+                Compartilhe este post:
+              </Text>
+              <a
+                href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
+                  window.location.href
+                )}&title=${encodeURIComponent(post.data.title)}&summary=${encodeURIComponent(
+                  post.data.subtitle
+                )}&source="Belclei"`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <SiLinkedin size={20} />
+              </a>
+              <a
+                href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
+                  post.data.title
+                )}&url=${encodeURIComponent(window.location.href)}`}
+                target="_blank"
+                rel="noreferrer"
+              >
+                <SiTwitter size={20} />
+              </a>
+            </HStack>
             <Text as="h1" px="4" fontFamily="heading" fontSize="2xl" fontWeight="bold" my="8" color="heading.500">
               Comentários
             </Text>
