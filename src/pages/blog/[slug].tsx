@@ -11,6 +11,7 @@ import { Text, Spinner, HStack } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
 import Comments from '../../components/Comments'
 import { SiLinkedin, SiTwitter } from 'react-icons/si'
+import { useState, useEffect } from 'react'
 
 interface PostProps {
   post: {
@@ -33,6 +34,11 @@ interface PostProps {
 
 export default function Post({ post }: PostProps): JSX.Element {
   const router = useRouter()
+  const [currentURL, setCurrentURL] = useState('')
+
+  useEffect(() => {
+    setCurrentURL(window.location.href)
+  }, [])
 
   return (
     <Flex w="100vw" h="100vh" as="article">
@@ -85,7 +91,7 @@ export default function Post({ post }: PostProps): JSX.Element {
               </Text>
               <a
                 href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
-                  window.location.href
+                  currentURL
                 )}&title=${encodeURIComponent(post.data.title)}&summary=${encodeURIComponent(
                   post.data.subtitle
                 )}&source="Belclei"`}
@@ -97,7 +103,7 @@ export default function Post({ post }: PostProps): JSX.Element {
               <a
                 href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(
                   post.data.title
-                )}&url=${encodeURIComponent(window.location.href)}`}
+                )}&url=${encodeURIComponent(currentURL)}`}
                 target="_blank"
                 rel="noreferrer"
               >
