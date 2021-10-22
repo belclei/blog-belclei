@@ -1,5 +1,5 @@
 import { Flex, Box, Text, HStack } from '@chakra-ui/react'
-import { CalendarIcon, TimeIcon } from '@chakra-ui/icons'
+import { TiCalendarOutline, TiStopwatch } from 'react-icons/ti'
 import Link from 'next/link'
 
 interface PostProps {
@@ -27,11 +27,11 @@ export function Post({ slug, title, createdAt, readTime, subtitle, updatedAt }: 
       </Text>
       <HStack my="3" spacing="4" color="body.100">
         <HStack>
-          <CalendarIcon />
+          <TiCalendarOutline size={20} />
           <Text>{createdAt}</Text>
         </HStack>
         <HStack>
-          <TimeIcon />
+          <TiStopwatch size={20} />
           <Text>{readTime} min de leitura</Text>
         </HStack>
         {updatedAt && (
