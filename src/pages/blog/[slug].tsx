@@ -55,6 +55,7 @@ export default function Post({ post }: PostProps): JSX.Element {
                 <Box key={data.heading} px="4">
                   <Box
                     my="4"
+                    fontSize="lg"
                     color="heading.500"
                     dangerouslySetInnerHTML={{
                       __html: RichText.asHtml(data.heading)
@@ -68,7 +69,7 @@ export default function Post({ post }: PostProps): JSX.Element {
                 </Box>
               )
             })}
-            <Text as="h1" fontFamily="heading" fontSize="2xl" fontWeight="bold" my="10" color="heading.500">
+            <Text as="h1" px="4" fontFamily="heading" fontSize="2xl" fontWeight="bold" my="8" color="heading.500">
               Comentários
             </Text>
             <Comments />

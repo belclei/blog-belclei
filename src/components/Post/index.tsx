@@ -13,14 +13,7 @@ interface PostProps {
 export function Post({ slug, title, createdAt, readTime, subtitle, updatedAt }: PostProps): JSX.Element {
   return (
     <Box px="4" mb="4" pb="4">
-      <Text
-        as="h1"
-        fontFamily="heading"
-        fontSize="2xl"
-        fontWeight="bold"
-        color="heading.500"
-        _hover={{ color: 'heading.400' }}
-      >
+      <Text as="h1" fontFamily="heading" fontSize="2xl" fontWeight="bold" color="heading.500">
         <Link href={`/blog/${slug}`}>
           <a>{title}</a>
         </Link>
@@ -34,12 +27,12 @@ export function Post({ slug, title, createdAt, readTime, subtitle, updatedAt }: 
           <TiStopwatch size={20} />
           <Text>{readTime} min de leitura</Text>
         </HStack>
-        {updatedAt && (
-          <HStack color="highlight.100">
-            <Text fontStyle="italic">*Atualizado em {updatedAt}</Text>
-          </HStack>
-        )}
       </HStack>
+      {updatedAt && (
+        <Text color="highlight.100" fontStyle="italic" mb="3" fontSize="sm">
+          * Atualizado em {updatedAt}
+        </Text>
+      )}
       <Text>{subtitle}</Text>
     </Box>
   )
