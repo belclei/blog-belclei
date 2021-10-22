@@ -1,6 +1,6 @@
 import { Flex, Text, HStack } from '@chakra-ui/react'
 import Link from 'next/link'
-import { SiLinkedin, SiInstagram, SiGithub, SiGmail } from 'react-icons/si'
+import { SiLinkedin, SiTwitter, SiGithub, SiGmail } from 'react-icons/si'
 
 export function Header() {
   return (
@@ -16,8 +16,8 @@ export function Header() {
         <a href="https://www.linkedin.com/in/belclei/" target="_blank" rel="noreferrer">
           <SiLinkedin size={20} />
         </a>
-        <a href="https://www.instagram.com/belclei/" target="_blank" rel="noreferrer">
-          <SiInstagram size={20} />
+        <a href="https://www.twitter.com/belclei/" target="_blank" rel="noreferrer">
+          <SiTwitter size={20} />
         </a>
         <a href="mailto:belclei@gmail.com">
           <SiGmail size={20} />
