@@ -9,6 +9,7 @@ import { RichText } from 'prismic-dom'
 import { Post as PostComponent } from '../../components/Post'
 import { Text, Spinner } from '@chakra-ui/react'
 import { useRouter } from 'next/router'
+import Comments from '../../components/Comments'
 
 interface PostProps {
   post: {
@@ -37,7 +38,7 @@ export default function Post({ post }: PostProps): JSX.Element {
       <Box maxW="800px" w="50rem" mx="auto">
         <Header />
         {router.isFallback ? (
-          <Spinner label="Carregando..." />
+          <Spinner />
         ) : (
           <>
             <PostComponent
@@ -67,6 +68,10 @@ export default function Post({ post }: PostProps): JSX.Element {
                 </Box>
               )
             })}
+            <Text as="h1" fontFamily="heading" fontSize="2xl" fontWeight="bold" my="10" color="heading.500">
+              Comentários
+            </Text>
+            <Comments />
           </>
         )}
       </Box>

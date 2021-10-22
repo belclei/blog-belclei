@@ -11,6 +11,7 @@ export const theme = extendTheme({
       '400': '#A13D63'
     },
     body: {
+      '900': '#001650',
       '800': '#001623',
       '200': '#fad8d6',
       '100': '#CCBFC9'
